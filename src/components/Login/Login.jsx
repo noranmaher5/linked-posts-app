@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import style from "./Login.module.css";
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -6,11 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { UserContext } from '../../Context/UserContext';
+
 
 export default function Login() {
   const navigate = useNavigate();
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  let {userLogin, setUserLogin} = useContext(UserContext);
 
 
   const schema = z.object({
@@ -50,7 +53,16 @@ export default function Login() {
       .then((response) => {
         if (response.data.message === "success") {
           setIsLoading(false);
-          navigate('/');
+          
+          console.log(response);
+         localStorage.setItem("userToken", response.data.token);
+console.log("Saved Token:", response.data.token);
+setUserLogin(response.data.token);
+navigate('/');
+
+
+     
+
         }
       })
       .catch((error) => {

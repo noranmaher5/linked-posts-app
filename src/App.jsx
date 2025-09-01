@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './components/Layout/Layout';
@@ -10,35 +7,47 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import NotFound from './components/NotFound/NotFound';
 import CounterContextProvider from './Context/CounterContext';
+import UserContextProvider from './Context/UserContext';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import PostContextProvider from './Context/PostContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import PostDeatils from './components/PostDeatils/PostDeatils';
+import { Toaster } from 'react-hot-toast';
 
+const query = new QueryClient();
 
-const x= createBrowserRouter([
-  {path : "" ,
-     element: <Layout/>, 
-     children: [
-    {index: true, element: <Home/>},
- { path: "profile", element: <Profile /> },
-{ path: "login", element: <Login /> },
-{ path: "register", element: <Register /> },
-
-    {path: "*", element: <NotFound/>},
-  ],
+const x = createBrowserRouter([
+  {
+    path: "",
+    element: <Layout />,
+    children: [
+      { index: true, element: <ProtectedRoute><Home /></ProtectedRoute> },
+      { path: "profile", element: <ProtectedRoute><Profile /></ProtectedRoute> },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
+      { path: "PostDeatils/:id", element: <PostDeatils /> },
+      { path: "*", element: <NotFound /> },
+    ],
   },
-
-
 ]);
 
 function App() {
-  
-
   return (
     <>
-    <CounterContextProvider>
-      <RouterProvider router={x}></RouterProvider>
-    </CounterContextProvider>
-
+      <UserContextProvider>
+        <PostContextProvider>
+          <CounterContextProvider>
+            <QueryClientProvider client={query}>
+              <RouterProvider router={x} />
+              <Toaster position="top-center" reverseOrder={false} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </CounterContextProvider>
+        </PostContextProvider>
+      </UserContextProvider>
     </>
   )
 }
 
-export default App
+export default App;
