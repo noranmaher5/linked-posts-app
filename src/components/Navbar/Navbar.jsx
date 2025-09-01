@@ -88,12 +88,13 @@ const userData = data?.data?.user;
             </div>
           ) : (
             <ul className="flex gap-4 text-gray-700 dark:text-gray-200">
-              <li>
-                <Link to="/login" className="hover:text-white">Login</Link>
-              </li>
-              <li>
-                <Link to="/register" className="hover:text-white">Register</Link>
-              </li>
+             <li>
+  <Link to="/login" className="text-white">Login</Link>
+</li>
+<li>
+  <Link to="/register" className="text-white">Register</Link>
+</li>
+
             </ul>
           )}
         </div>
